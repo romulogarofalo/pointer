@@ -73,4 +73,11 @@ instance (Monoid m, Arrow a, Action m b) => ActionF m (WrappedArrow a b) where
 
 -----------------------------------------------------------
 
+class Monoid m => ActionM m where 
+    (<.-.>) :: m -> m -> m
+
 newtype WriteAction = WA(forall a. Ptr a -> IO ())
+
+instance Monoid WriteAction where 
+    mempty = WA $ const (return())
+    WA w1 `mappend` WA w2 = WA $ \ptr -> w1 ptr >> w2 ptr
