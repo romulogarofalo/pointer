@@ -73,3 +73,4 @@ instance (Monoid m, Arrow a, Action m b) => ActionF m (WrappedArrow a b) where
 
 -----------------------------------------------------------
 
+newtype WriteAction = WA(forall a. Ptr a -> IO ())
