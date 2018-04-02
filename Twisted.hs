@@ -81,3 +81,11 @@ newtype WriteAction = WA(forall a. Ptr a -> IO ())
 instance Monoid WriteAction where 
     mempty = WA $ const (return())
     WA w1 `mappend` WA w2 = WA $ \ptr -> w1 ptr >> w2 ptr
+
+
+newtype ParseAction a = PA (forall a. Ptr a -> IO a)
+
+
+instance Applicative ParseAction where
+    pure = PA $ const $ return
+    (PA pf) <*> (PA px) = PA $ \ptr -> pf ptr <*> px ptr
